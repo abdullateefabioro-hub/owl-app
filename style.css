@@ -77,4 +77,13 @@ input:focus{border-color:rgba(255,90,165,.4)}
   .hero,.cat-layout{grid-template-columns:1fr;display:grid}
   .pairing-form,.inline-form,.composer{flex-direction:column}
   .bottom-nav{grid-template-columns:repeat(4,1fr)}
+  .cat-theme{
+
+background-image:url("https://images.unsplash.com/photo-1518791841217-8f162f1e1131");
+
+background-size:cover;
+
+background-position:center;
+
+}
 }
