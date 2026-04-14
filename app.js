@@ -56,6 +56,13 @@ function getOrCreateId(){
 }
 function formatTime(ts){ return new Date(ts).toLocaleString(); }
 function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
+function simpleEncrypt(text){
+  return btoa(text);
+}
+
+function simpleDecrypt(text){
+  return atob(text);
+}
 function pruneLocations(arr){
   const cutoff = Date.now() - 24*60*60*1000;
   return arr.filter(x => x.ts >= cutoff).sort((a,b)=>b.ts-a.ts);
@@ -72,6 +79,7 @@ function init(){
   renderAll();
   registerSW();
   setupInstall();
+  scheduleReminder();
 }const LOVE_MESSAGES = [
 
 "You are my favourite part of every day 💙",
@@ -104,7 +112,15 @@ document.getElementById("loveMessage").textContent = saved.msg;
 return;
 
 }
+function scheduleReminder(){
 
+setTimeout(()=>{
+
+alert("Time to message Sweny 💙");
+
+}, 1000*60*60*4); // 4 hours
+
+}
 }
 
 const msg = LOVE_MESSAGES[Math.floor(Math.random()*LOVE_MESSAGES.length)];
@@ -204,7 +220,7 @@ function renderChat(){
   if(!state.chat.length){ el.innerHTML = `<div class="muted">No messages yet. Start your little world.</div>`; return; }
   el.innerHTML = state.chat.map(msg => `
     <div class="bubble ${msg.sender===state.meId?'me':'them'}">
-      <div>${escapeHtml(msg.text)}</div>
+      <div>${escapeHtml(simpleDecrypt(msg.text))}</div>
       <div class="bubble-meta">${msg.sender===state.meId?'You':'Her'} • ${formatTime(msg.ts)}</div>
     </div>`).join('');
   el.scrollTop = el.scrollHeight;
@@ -220,7 +236,7 @@ function sendChat(e){
   const input = qs('#chatInput');
   const text = input.value.trim();
   if(!text) return;
-  const msg = { type:'chat', sender:state.meId, text, ts:Date.now(), roomId:state.roomId };
+  const msg = { type:'chat', sender:state.meId, text: simpleEncrypt(text), ts:Date.now(), roomId:state.roomId };
   addLocalMessage(msg);
   input.value='';
   relay(msg);
