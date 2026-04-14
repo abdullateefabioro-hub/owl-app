@@ -1,0 +1,13 @@
+{
+  "name": "O.W.L — Our World Link",
+  "short_name": "O.W.L",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#09090d",
+  "theme_color": "#0b0b0f",
+  "description": "A romantic installable couples app for two.",
+  "icons": [
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"}
+  ]
+}

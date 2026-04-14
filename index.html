@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <meta name="description" content="O.W.L — Our World Link, a private romantic PWA for two." />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>O.W.L — Our World Link</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app-shell">
+    <header class="topbar glass">
+      <div>
+        <p class="eyebrow">O.W.L</p>
+        <h1>Our World Link</h1>
+      </div>
+      <button id="installBtn" class="ghost-btn hidden">Install</button>
+    </header>
+
+    <main>
+      <section id="homePage" class="page active">
+        <section class="hero glass">
+          <div>
+            <p class="eyebrow">Private little world for two</p>
+            <h2>Luxury, love, cats, care, and connection.</h2>
+            <p class="subtext">Built for both of you to feel close every day — chat, call, cat of the day, meals, memories, care, and check-ins.</p>
+          </div>
+          <div class="hero-pill">Her Birthday<br><strong>19 January</strong></div>
+        </section>
+
+        <section class="pairing glass">
+          <div>
+            <h3>Pair your world</h3>
+            <p>Use the same private phrase on both phones to connect the same room.</p>
+          </div>
+          <div class="pairing-form">
+            <input id="pairPhrase" type="password" placeholder="Enter your private phrase" />
+            <button id="savePhraseBtn" class="primary-btn">Save phrase</button>
+          </div>
+          <p id="pairingStatus" class="muted"></p>
+        </section>
+
+        <section class="grid cards-grid" id="featureGrid"></section>
+      </section>
+
+      <section id="chatPage" class="page">
+        <div class="section-head">
+          <h2>Chat</h2>
+          <button class="ghost-btn clear-chat">Clear local chat</button>
+        </div>
+        <div id="chatMessages" class="chat-box glass"></div>
+        <form id="chatForm" class="composer glass">
+          <input id="chatInput" type="text" placeholder="Write something sweet…" maxlength="500" />
+          <button class="primary-btn" type="submit">Send</button>
+        </form>
+      </section>
+
+      <section id="callPage" class="page">
+        <div class="section-head">
+          <h2>Call</h2>
+        </div>
+        <div class="glass stack">
+          <p>Start a private room with one tap. This uses a free embedded Jitsi room.</p>
+          <div class="inline-form">
+            <input id="callRoomInput" type="text" placeholder="Optional custom room name" />
+            <button id="launchCallBtn" class="primary-btn">Open call room</button>
+          </div>
+          <div id="callFrameWrap" class="call-wrap hidden">
+            <iframe id="callFrame" title="Call room" allow="camera; microphone; fullscreen; display-capture"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section id="catPage" class="page">
+        <div class="section-head">
+          <h2>Cat of the Day</h2>
+          <button id="newCatBtn" class="ghost-btn">New cat</button>
+        </div>
+        <div class="glass cat-layout">
+          <img id="catImage" alt="Cat of the day" />
+          <div>
+            <h3 id="catTitle">A little cat for her</h3>
+            <p id="catCaption" class="subtext">A soft daily cat moment in your world.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="locationPage" class="page">
+        <div class="section-head">
+          <h2>Location</h2>
+          <span id="locationBadge" class="status-badge off">OFF</span>
+        </div>
+        <div class="grid two-col">
+          <div class="glass stack">
+            <h3>Share location</h3>
+            <p>Exact location works while the app stays open. History is kept locally for 24 hours.</p>
+            <div class="inline-form wrap">
+              <button id="checkInBtn" class="primary-btn">Share location now</button>
+              <button id="startLiveBtn" class="ghost-btn">Start live share</button>
+              <button id="stopLiveBtn" class="ghost-btn danger">Stop sharing</button>
+            </div>
+            <p id="locationStatus" class="muted">Location not started.</p>
+            <div id="liveMapLinkWrap"></div>
+          </div>
+          <div class="glass stack">
+            <h3>Last 24h history</h3>
+            <div id="locationHistory" class="history-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="wellnessPage" class="page">
+        <div class="section-head">
+          <h2>Wellness</h2>
+        </div>
+        <div class="grid three-col">
+          <div class="glass stack">
+            <h3>Nutrition board</h3>
+            <div id="mealBoard"></div>
+          </div>
+          <div class="glass stack">
+            <h3>Sleep tracker</h3>
+            <label>Hours last night</label>
+            <input id="sleepInput" type="number" min="0" max="24" step="0.5" />
+            <button id="saveSleepBtn" class="primary-btn">Save sleep</button>
+            <p id="sleepStatus" class="muted"></p>
+          </div>
+          <div class="glass stack">
+            <h3>Exercise tracker</h3>
+            <label>Minutes today</label>
+            <input id="exerciseInput" type="number" min="0" max="600" step="1" />
+            <button id="saveExerciseBtn" class="primary-btn">Save exercise</button>
+            <p id="exerciseStatus" class="muted"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="streaksPage" class="page">
+        <div class="section-head">
+          <h2>Streaks</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="glass stack">
+            <h3>Daily love streak</h3>
+            <p>Mark today when you both connected.</p>
+            <button id="markStreakBtn" class="primary-btn">Mark today</button>
+            <p id="streakStatus" class="muted"></p>
+          </div>
+          <div class="glass stack">
+            <h3>Stats</h3>
+            <div id="streakStats"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="photosPage" class="page">
+        <div class="section-head">
+          <h2>Memory Album</h2>
+        </div>
+        <div class="glass stack">
+          <input id="photoInput" type="file" accept="image/*" multiple />
+          <p class="muted">Photos are saved only on this device in your browser.</p>
+          <div id="photoGrid" class="photo-grid"></div>
+        </div>
+      </section>
+
+      <section id="calendarPage" class="page">
+        <div class="section-head">
+          <h2>Calendar</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="glass stack">
+            <h3>Add your moment</h3>
+            <input id="eventTitle" type="text" placeholder="Date idea / anniversary / check-in" />
+            <input id="eventDate" type="date" />
+            <button id="saveEventBtn" class="primary-btn">Save event</button>
+          </div>
+          <div class="glass stack">
+            <h3>Your dates</h3>
+            <div id="eventsList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gamesPage" class="page">
+        <div class="section-head">
+          <h2>Games She Loves</h2>
+        </div>
+        <div id="gamesList" class="glass stack"></div>
+      </section>
+
+      <section id="settingsPage" class="page">
+        <div class="section-head">
+          <h2>Settings</h2>
+        </div>
+        <div class="glass stack">
+          <label>Backend URL</label>
+          <input id="backendUrlInput" type="url" placeholder="https://your-worker.workers.dev" />
+          <button id="saveBackendBtn" class="primary-btn">Save backend URL</button>
+          <p class="muted">This connects chat and live location relay between your two phones.</p>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav glass" id="bottomNav"></nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
