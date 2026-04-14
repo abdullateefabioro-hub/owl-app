@@ -72,6 +72,47 @@ function init(){
   renderAll();
   registerSW();
   setupInstall();
+}const LOVE_MESSAGES = [
+
+"You are my favourite part of every day 💙",
+"No matter the distance, you are always close to my heart",
+"Our little world is my safest place",
+"You make ordinary days feel magical",
+"My heart feels calm when I think of you",
+"You are my peace, my happiness, my everything",
+"Every day I feel lucky to have you",
+"You are my forever person",
+"Even miles away, I feel you with me",
+"Sweny (Kuku) 💙 you are my home"
+
+];
+
+function showLoveMessage(){
+
+const today = new Date().toDateString();
+
+let saved = localStorage.getItem("owl_love_msg");
+
+if(saved){
+
+saved = JSON.parse(saved);
+
+if(saved.day === today){
+
+document.getElementById("loveMessage").textContent = saved.msg;
+
+return;
+
+}
+
+}
+
+const msg = LOVE_MESSAGES[Math.floor(Math.random()*LOVE_MESSAGES.length)];
+
+localStorage.setItem("owl_love_msg", JSON.stringify({day:today,msg}));
+
+document.getElementById("loveMessage").textContent = msg;
+
 }
 
 function buildGrid(){
@@ -135,9 +176,24 @@ function saveBackendUrl(){
   if(state.roomId) connectSocket();
 }
 function renderAll(){
-  renderChat(); renderLocations(); renderWellness(); renderStreaks(); renderPhotos(); renderEvents(); renderGames(); renderCat(); updatePairStatus();
+
+  renderChat(); 
+  renderLocations(); 
+  renderWellness(); 
+  renderStreaks(); 
+  renderPhotos(); 
+  renderEvents(); 
+  renderGames(); 
+  renderCat(); 
+
+  showLoveMessage();
+
+  updatePairStatus();
+
   if(state.roomId && state.backendUrl) connectSocket();
+
   loadCat(false);
+
 }
 function updatePairStatus(){
   qs('#pairingStatus').textContent = state.roomId ? 'Paired phrase saved on this phone.' : 'Not paired yet.';
