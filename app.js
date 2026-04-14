@@ -83,6 +83,8 @@ function init(){
   updateLiveInfo();
 setInterval(updateLiveInfo,1000);
   loadWeather();
+  relationshipTimer();
+  heartbeat();
 }
 const LOVE_MESSAGES = [
 
@@ -152,6 +154,21 @@ function buildNav(){
     ['homePage','Home'],['chatPage','Chat'],['callPage','Call'],['locationPage','Location'],['wellnessPage','Care'],['photosPage','Memories'],['gamesPage','Games'],['settingsPage','Settings']
   ];
   qs('#bottomNav').innerHTML = navItems.map(([page,label]) => `<button class="nav-btn ${page===state.page?'active':''}" data-page="${page}">${label}</button>`).join('');
+}
+function relationshipTimer(){
+
+const start = new Date("2024-01-01");
+
+const now = new Date();
+
+const diff = now - start;
+
+const days = Math.floor(diff/(1000*60*60*24));
+
+document.getElementById("loveTimer").textContent =
+
+days + " days together 💙";
+
 }
 function showPage(id){
   state.page = id;
@@ -398,6 +415,23 @@ function oneTimeCheckIn(){
     qs('#liveMapLinkWrap').innerHTML = `<a class="map-link" target="_blank" rel="noreferrer" href="https://www.google.com/maps?q=${payload.lat},${payload.lng}">Open latest location</a>`;
     setLocationUI(true, `Shared at ${formatTime(payload.ts)}`);
   }, err => setLocationUI(false, 'Location error: ' + err.message), {enableHighAccuracy:true, timeout:15000, maximumAge:0});
+}
+function heartbeat(){
+
+setInterval(()=>{
+
+relay({
+
+type:'online',
+
+sender:state.meId,
+
+roomId:state.roomId
+
+});
+
+},5000);
+
 }
 function updateLiveInfo(){
 
