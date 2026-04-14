@@ -80,6 +80,9 @@ function init(){
   registerSW();
   setupInstall();
   scheduleReminder();
+  updateLiveInfo();
+setInterval(updateLiveInfo,1000);
+  loadWeather();
 }const LOVE_MESSAGES = [
 
 "You are my favourite part of every day 💙",
@@ -219,6 +222,7 @@ function renderChat(){
   const el = qs('#chatMessages');
   if(!state.chat.length){ el.innerHTML = `<div class="muted">No messages yet. Start your little world.</div>`; return; }
   el.innerHTML = state.chat.map(msg => `
+  msg.read = true;
     <div class="bubble ${msg.sender===state.meId?'me':'them'}">
       <div>${escapeHtml(simpleDecrypt(msg.text))}</div>
       <div class="bubble-meta">${msg.sender===state.meId?'You':'Her'} • ${formatTime(msg.ts)}</div>
@@ -226,6 +230,7 @@ function renderChat(){
   el.scrollTop = el.scrollHeight;
 }
 function addLocalMessage(msg){
+  msg.read = false;
   state.chat.push(msg);
   state.chat = state.chat.slice(-300);
   saveJSON('owl_chat', state.chat);
@@ -325,6 +330,35 @@ function oneTimeCheckIn(){
     setLocationUI(true, `Shared at ${formatTime(payload.ts)}`);
   }, err => setLocationUI(false, 'Location error: ' + err.message), {enableHighAccuracy:true, timeout:15000, maximumAge:0});
 }
+function updateLiveInfo(){
+
+const now = new Date();
+
+const options = {
+
+weekday:'long',
+
+day:'numeric',
+
+month:'long'
+
+};
+
+document.getElementById("liveDate").textContent =
+
+now.toLocaleDateString(undefined, options);
+
+document.getElementById("liveTime").textContent =
+
+now.toLocaleTimeString([],{
+
+hour:'2-digit',
+
+minute:'2-digit'
+
+});
+
+}
 function startLiveShare(){
   if(!navigator.geolocation) return setLocationUI(false,'Geolocation is not available on this device.');
   if(state.watchId) return setLocationUI(true,'Live sharing is already running while the app stays open.');
@@ -369,6 +403,51 @@ function markStreak(){
   state.streakDays = [...new Set(state.streakDays)].sort();
   saveJSON('owl_streak_days', state.streakDays);
   renderStreaks();
+}
+async function loadWeather(){
+
+if(!navigator.geolocation){
+
+document.getElementById("liveWeather").textContent = "Location disabled";
+
+return;
+
+}
+
+navigator.geolocation.getCurrentPosition(
+
+async pos=>{
+
+const lat = pos.coords.latitude;
+
+const lon = pos.coords.longitude;
+
+const res = await fetch(
+
+`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+
+);
+
+const data = await res.json();
+
+const temp = data.current_weather.temperature;
+
+document.getElementById("liveWeather").textContent =
+
+temp+"°C";
+
+},
+
+()=>{
+
+document.getElementById("liveWeather").textContent =
+
+"Weather unavailable";
+
+}
+
+);
+
 }
 function currentStreak(days){
   const set = new Set(days);
@@ -442,11 +521,19 @@ function renderGames(){
 }
 
 function launchCall(){
-  const custom = qs('#callRoomInput').value.trim();
-  const room = custom || `owl-${state.roomId || 'ourworld'}`;
-  const src = `https://meet.jit.si/${encodeURIComponent(room)}#config.prejoinPageEnabled=false`;
-  qs('#callFrame').src = src;
-  qs('#callFrameWrap').classList.remove('hidden');
+
+const room = state.roomId || "owl";
+
+const zoomMeetingID =
+
+room.replace(/[^0-9]/g,"").slice(0,9) || "123456789";
+
+const link =
+
+"https://zoom.us/j/"+zoomMeetingID;
+
+window.open(link);
+
 }
 
 function setupInstall(){
