@@ -129,8 +129,6 @@ JSON.stringify({day:today,msg})
 document.getElementById("loveMessage").textContent = msg;
 
 }
-
-
 function scheduleReminder(){
 
 setTimeout(()=>{
@@ -138,24 +136,6 @@ setTimeout(()=>{
 alert("Time to message Sweny 💙");
 
 }, 1000*60*60*4);
-
-}
-function scheduleReminder(){
-
-setTimeout(()=>{
-
-alert("Time to message Sweny 💙");
-
-}, 1000*60*60*4); // 4 hours
-
-}
-}
-
-const msg = LOVE_MESSAGES[Math.floor(Math.random()*LOVE_MESSAGES.length)];
-
-localStorage.setItem("owl_love_msg", JSON.stringify({day:today,msg}));
-
-document.getElementById("loveMessage").textContent = msg;
 
 }
 
