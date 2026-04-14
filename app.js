@@ -83,7 +83,8 @@ function init(){
   updateLiveInfo();
 setInterval(updateLiveInfo,1000);
   loadWeather();
-}const LOVE_MESSAGES = [
+}
+const LOVE_MESSAGES = [
 
 "You are my favourite part of every day 💙",
 "No matter the distance, you are always close to my heart",
@@ -170,6 +171,19 @@ function bindEvents(){
   qs('#savePhraseBtn').onclick = savePairPhrase;
   qs('#saveBackendBtn').onclick = saveBackendUrl;
   qs('#chatForm').addEventListener('submit', sendChat);
+  qs('#chatInput').addEventListener('input', () => {
+
+relay({
+
+type:'typing',
+
+sender:state.meId,
+
+roomId:state.roomId
+
+});
+
+});
   qs('.clear-chat').onclick = () => { if(confirm('Clear local chat on this device?')){ state.chat=[]; saveJSON('owl_chat',state.chat); renderChat(); }};
   qs('#newCatBtn').onclick = () => loadCat(true);
   qs('#launchCallBtn').onclick = launchCall;
@@ -284,7 +298,7 @@ function sendChat(e){
   const input = qs('#chatInput');
   const text = input.value.trim();
   if(!text) return;
-  const msg = { type:'chat', sender:state.meId, text: simpleEncrypt(text), ts:Date.now(), roomId:state.roomId };
+  const msg = { type:'chat', sender:state.meId, text: simpleEncrypt(text.trim()), ts:Date.now(), roomId:state.roomId };
   addLocalMessage(msg);
   input.value='';
   relay(msg);
@@ -306,6 +320,18 @@ function connectSocket(){
         const data = JSON.parse(event.data);
         if(data.sender === state.meId) return;
         if(data.type==='chat') addLocalMessage(data);
+        if(data.type==='typing'){
+
+document.getElementById("typingStatus").textContent =
+"typing...";
+
+setTimeout(()=>{
+
+document.getElementById("typingStatus").textContent="";
+
+},1500);
+
+}
         if(data.type==='location') addLocation(data, false);
       } catch(err){ console.error(err); }
     };
