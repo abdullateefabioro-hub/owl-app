@@ -115,6 +115,31 @@ document.getElementById("loveMessage").textContent = saved.msg;
 return;
 
 }
+
+}
+
+const msg =
+LOVE_MESSAGES[Math.floor(Math.random()*LOVE_MESSAGES.length)];
+
+localStorage.setItem(
+"owl_love_msg",
+JSON.stringify({day:today,msg})
+);
+
+document.getElementById("loveMessage").textContent = msg;
+
+}
+
+
+function scheduleReminder(){
+
+setTimeout(()=>{
+
+alert("Time to message Sweny 💙");
+
+}, 1000*60*60*4);
+
+}
 function scheduleReminder(){
 
 setTimeout(()=>{
@@ -219,15 +244,53 @@ function updatePairStatus(){
 }
 
 function renderChat(){
-  const el = qs('#chatMessages');
-  if(!state.chat.length){ el.innerHTML = `<div class="muted">No messages yet. Start your little world.</div>`; return; }
-  el.innerHTML = state.chat.map(msg => `
-  msg.read = true;
-    <div class="bubble ${msg.sender===state.meId?'me':'them'}">
-      <div>${escapeHtml(simpleDecrypt(msg.text))}</div>
-      <div class="bubble-meta">${msg.sender===state.meId?'You':'Her'} • ${formatTime(msg.ts)}</div>
-    </div>`).join('');
-  el.scrollTop = el.scrollHeight;
+
+const el = qs('#chatMessages');
+
+if(!state.chat.length){
+
+el.innerHTML =
+`<div class="muted">
+No messages yet.
+Start your little world.
+</div>`;
+
+return;
+
+}
+
+el.innerHTML =
+state.chat.map(msg => {
+
+msg.read = true;
+
+return `
+<div class="bubble ${msg.sender===state.meId?'me':'them'}">
+
+<div>
+
+${escapeHtml(simpleDecrypt(msg.text))}
+
+</div>
+
+<div class="bubble-meta">
+
+${msg.sender===state.meId?'You':'Her'}
+
+•
+
+${formatTime(msg.ts)}
+
+</div>
+
+</div>
+
+`;
+
+}).join('');
+
+el.scrollTop = el.scrollHeight;
+
 }
 function addLocalMessage(msg){
   msg.read = false;
