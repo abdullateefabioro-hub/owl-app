@@ -349,6 +349,21 @@ document.getElementById("typingStatus").textContent="";
 },1500);
 
 }
+        if(data.type==='online'){
+
+document.getElementById("onlineStatus").textContent =
+"Online 🟢";
+
+clearTimeout(window.offlineTimer);
+
+window.offlineTimer = setTimeout(()=>{
+
+document.getElementById("onlineStatus").textContent =
+"Offline";
+
+},7000);
+
+}
         if(data.type==='location') addLocation(data, false);
       } catch(err){ console.error(err); }
     };
