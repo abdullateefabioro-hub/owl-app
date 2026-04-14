@@ -85,6 +85,7 @@ setInterval(updateLiveInfo,1000);
   loadWeather();
   relationshipTimer();
   heartbeat();
+  showLoveMessage();
 }
 const LOVE_MESSAGES = [
 
